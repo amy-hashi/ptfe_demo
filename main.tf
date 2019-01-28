@@ -38,5 +38,5 @@ resource "aws_instance" "amy-ptfe-demo" {
 }
 
 output "ip" {
-  value = ["${aws_instance.main.*.public_ip}"]
+  value = ["${aws_instance.amy-ptfe-demo.*.public_ip}"]
 }
