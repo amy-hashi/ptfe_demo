@@ -55,5 +55,5 @@ output "ip" {
 }
 
 output "fqdn" {
-  value = "{aws_route53_record.amy-ptfe-demo.*.fqdn}"
+  value = "${aws_route53_record.amy-ptfe-demo.*.fqdn}"
   }
