@@ -59,7 +59,40 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   
   provisioner "remote-exec" {
     inline = [
-      "mkdir /tmp/ptfe-install"]
+      "mkdir /tmp/ptfe-install",
+      "sudo apt-get install -y software-properties-common",
+      "sudo add-apt-repository -y universe",
+      "sudo add-apt-repository -y ppa:certbot/certbot",
+      "sudo apt-get install -y certbot",
+      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d ${element(aws_route53_record.amy-ptfe-demo.*.fqdn, count.index)}",
+      ]
+    }
+  
+  provisioner "file" {
+    source = "${var.json_location}"
+    destination = "/tmp/ptfe-install/settings.json"
+    }
+  
+  provisioner "file" {
+    source = "${var.replicated_conf}"
+    destination = "/etc/replicated.conf"
+    }
+  
+  provisioner "file" {
+    source = "${var.license}"
+    destination = "/tmp/ptfe-install/license.rli"
+    }
+  
+  provisioner "file" {
+    source = "application-install/replicated-install.sh"
+    destination = "/tmp/ptfe-install/replicated-install.sh"
+    }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/ptfe-install/replicated-install.sh",
+      "/tmp/ptfe-install/replicated-install.sh",
+      ]
     }
 }
 
