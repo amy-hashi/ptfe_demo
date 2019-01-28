@@ -52,7 +52,7 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   resource "null_resource" "provision_ptfe" {  
   connection {
     type = "ssh"
-    host = "${element(aws_route53_record.amy-ptfe-demo.*.fqdn, 0)}"
+    host = "${aws_instance.amy-ptfe-demo.0.public_ip}"
     user = "ubuntu"
     private_key = "${var.aws_pem}"
     agent = false
