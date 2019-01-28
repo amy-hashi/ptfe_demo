@@ -37,7 +37,7 @@ resource "aws_instance" "amy-ptfe-demo" {
   count = "${var.instance_count}"
   tags {
     "Owner" = "Amy Brown"
-    "Name" = "amy-ptfe-demo"
+    "Name" = "amy-ptfe${var.instance_count}"
   }
 }
 
