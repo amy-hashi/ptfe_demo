@@ -36,3 +36,7 @@ resource "aws_instance" "amy-ptfe-demo" {
     "Name" = "amy-ptfe-demo"
   }
 }
+
+output "ip" {
+  value = "${aws_eip.ip.public_ip}"
+}
