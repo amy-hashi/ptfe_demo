@@ -48,7 +48,22 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   type = "A"
   ttl = "300"
   records = ["${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"]
+  
+  resource "null_resource" "provision_ptfe" {  
+  connection {
+    type = "ssh"
+    host = "${element(aws_instance.*.public_ip, 0)}"
+    user = "ubuntu"
+    private_key = "${var.aws_pem}"
+    agent = false
+    }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /tmp/ptfe-install"]
+    }
   }
+}
 
 output "ip" {
   value = ["${aws_instance.amy-ptfe-demo.*.public_ip}"]
@@ -58,21 +73,4 @@ output "fqdn" {
   value = "${aws_route53_record.amy-ptfe-demo.*.fqdn}"
   }
 
-#resource "null_resource" "provision_ptfe" {
-#   triggers {
-#     instance_ids = "$join(",", aws_instance.*.id)}"
-#     }
-  
-#  connection {
-#    type = "ssh"
-#    host = "${element(aws_instance.*.public_ip, 0)}"
-#    user = "ubuntu"
-#    private_key = "${var.aws_pem}"
-#    agent = false
-#    }
-  
-#  provisioner "remote-exec" {
-#    inline = [
-#      "mkdir /tmp/ptfe-install"]
-#    }
-#  }
+
