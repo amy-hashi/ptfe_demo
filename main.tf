@@ -57,3 +57,22 @@ output "ip" {
 output "fqdn" {
   value = "${aws_route53_record.amy-ptfe-demo.*.fqdn}"
   }
+
+resource "null_resource" "provision_ptfe" {
+   triggers {
+     instance_ids = "$join(",", aws_instance.*.id)}"
+     }
+  
+  connection {
+    type = "ssh"
+    host = "${element(aws_instance.*.public_ip, 0)}"
+    user = "ubuntu"
+    private_key = "${var.aws_pem}"
+    agent = false
+    }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /tmp/ptfe-install"]
+    }
+  }
