@@ -49,7 +49,6 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   ttl = "300"
   records = ["${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"]
   
-  resource "null_resource" "provision_ptfe" {  
   connection {
     type = "ssh"
     host = "${aws_instance.amy-ptfe-demo.0.public_ip}"
@@ -62,8 +61,13 @@ resource "aws_route53_record" "amy-ptfe-demo" {
     inline = [
       "mkdir /tmp/ptfe-install"]
     }
-  }
 }
+
+#resource "null_resource" "provision_ptfe" {  
+#  triggers {
+#    route53_resource = "$(element{aws_route53_record.amy-ptfe-demo.id, count.index)}"
+#    }
+#}
 
 output "ip" {
   value = ["${aws_instance.amy-ptfe-demo.*.public_ip}"]
