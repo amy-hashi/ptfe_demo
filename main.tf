@@ -33,5 +33,6 @@ resource "aws_instance" "amy-ptfe-demo" {
   count = 1
   tags {
     "Owner" = "Amy Brown"
+    "Name" = "amy-ptfe-demo"
   }
 }
