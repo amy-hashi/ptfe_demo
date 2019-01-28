@@ -13,3 +13,4 @@ variable "replicated_conf" {
 variable "license" {
   default = "application-install/amy.rli"
   }
+variable "email_address" {}
