@@ -47,7 +47,7 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   name = "amy-ptfe${count.index}"
   type = "A"
   ttl = "300"
-  records = ["${element(aws_instance.amy-ptfe-demo.*.private_ip, count.index)}"]
+  records = ["${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"]
   }
 
 output "ip" {
