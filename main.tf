@@ -24,7 +24,7 @@ resource "aws_instance" "amy-ptfe-demo" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "m5a.large"
   key_name = "amy-ohio"
-  security_groups = ["sg-0753511d92cf43cc5"]
+  vpc_security_group_ids = ["sg-0753511d92cf43cc5"]
   subnet_id = "subnet-0df3e7ca2603dc1ac"
   associate_public_ip_address = true
   volume_tags {
