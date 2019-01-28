@@ -79,15 +79,10 @@ resource "aws_route53_record" "amy-ptfe-demo" {
     destination = "/tmp/ptfe-install/license.rli"
     }
   
-  provisioner "file" {
-    source = "application-install/replicated-install.sh"
-    destination = "/tmp/ptfe-install/replicated-install.sh"
-    }
-  
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/ptfe-install/replicated-install.sh",
-      "/tmp/ptfe-install/replicated-install.sh",
+      "cd /tmp/ptfe-install; curl -o install.sh https://install.terraform.io/ptfe/stable",
+      "bash /tmp/ptfe-install/install.sh no-proxy private-address=${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)} public-address=${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"
       ]
     }
 }
