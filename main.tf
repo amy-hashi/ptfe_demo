@@ -1,3 +1,7 @@
+variable "instance_count" {
+  default = 1
+  }
+
 provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
@@ -30,12 +34,21 @@ resource "aws_instance" "amy-ptfe-demo" {
   volume_tags {
     volume_size = "50"
     }
-  count = 1
+  count = "${var.instance_count}"
   tags {
     "Owner" = "Amy Brown"
     "Name" = "amy-ptfe-demo"
   }
 }
+
+resource "aws_route53_record" "amy-ptfe-demo" {
+  count = "${var.instance_count}"
+  zone_id = "Z30WCTDR9QHV42"
+  name = "amy-ptfe${count.index}"
+  type = "A"
+  ttl = "300"
+  records = ["${element(aws_instance.amy-ptfe-demo.*.private_ip, count.index)}"]
+  }
 
 output "ip" {
   value = ["${aws_instance.amy-ptfe-demo.*.public_ip}"]
