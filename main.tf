@@ -1,5 +1,5 @@
 variable "instance_count" {
-  default = 1
+  default = 2
   }
 
 provider "aws" {
