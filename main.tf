@@ -1,5 +1,5 @@
 variable "instance_count" {
-  default = 1
+  default = 0
   }
 
 provider "aws" {
@@ -53,3 +53,6 @@ resource "aws_route53_record" "amy-ptfe-demo" {
 output "ip" {
   value = ["${aws_instance.amy-ptfe-demo.*.public_ip}"]
 }
+
+output "fqdn" {
+  value = ["{aws_route53_record.amy-ptfe-demo.*.fqdn}"]
