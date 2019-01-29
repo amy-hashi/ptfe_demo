@@ -60,7 +60,7 @@ resource "aws_route53_record" "amy-ptfe-demo" {
       "sudo add-apt-repository -y universe",
       "sudo add-apt-repository -y ppa:certbot/certbot",
       "sudo apt-get install -y certbot",
-      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d {element(#aws_route53_record.amy-ptfe-demo.*.fqdn, count.index)}",
+      #"sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d {element(#aws_route53_record.amy-ptfe-demo.*.fqdn, count.index)}",
       ]
     }
   #
