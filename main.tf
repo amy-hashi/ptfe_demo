@@ -45,24 +45,24 @@ resource "aws_route53_record" "amy-ptfe-demo" {
   ttl = "300"
   records = ["${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"]
   
-  #connection {
-  #  type = "ssh"
-  #  host = "${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"
-  #  user = "ubuntu"
-  #  private_key = "${var.aws_pem}"
-  #  agent = false
-  #  }
-  #
-  #provisioner "remote-exec" {
-  #  inline = [
-  #    "mkdir /tmp/ptfe-install",
-  #    "sudo apt-get install -y software-properties-common",
-  #    "sudo add-apt-repository -y universe",
-  #    "sudo add-apt-repository -y ppa:certbot/certbot",
-  #    "sudo apt-get install -y certbot",
-  #    "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d ${element(#aws_route53_record.amy-ptfe-demo.*.fqdn, count.index)}",
-  #    ]
-  #  }
+  connection {
+    type = "ssh"
+    host = "${element(aws_instance.amy-ptfe-demo.*.public_ip, count.index)}"
+    user = "ubuntu"
+    private_key = "${var.aws_pem}"
+    agent = false
+    }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /tmp/ptfe-install",
+      "sudo apt-get install -y software-properties-common",
+      "sudo add-apt-repository -y universe",
+      "sudo add-apt-repository -y ppa:certbot/certbot",
+      "sudo apt-get install -y certbot",
+      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d {element(#aws_route53_record.amy-ptfe-demo.*.fqdn, count.index)}",
+      ]
+    }
   #
   #provisioner "file" {
   #  source = "${var.json_location}"
