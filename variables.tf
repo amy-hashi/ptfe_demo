@@ -14,3 +14,6 @@ variable "license" {
   default = "application-install/amy.rli"
   }
 variable "email_address" {}
+variable "shortname" {}
+variable "keyname" {}
+variable "owner" {}
