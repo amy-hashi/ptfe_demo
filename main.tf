@@ -20,7 +20,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "${var.shortname}-ptfe-demo" {
+resource "aws_instance" "ptfe-demo" {
   ami                         = "${data.aws_ami.ubuntu.id}"
   instance_type               = "m5a.large"
   key_name                    = "${var.keyname}"
@@ -40,17 +40,17 @@ resource "aws_instance" "${var.shortname}-ptfe-demo" {
   }
 }
 
-resource "aws_route53_record" "amy-ptfe-demo" {
+resource "aws_route53_record" "ptfe-demo" {
   count   = "${var.instance_count}"
   zone_id = "Z30WCTDR9QHV42"
   name    = "${var.shortname}-ptfe${count.index}"
   type    = "A"
   ttl     = "300"
-  records = ["${element(aws_instance.${var.shortname}-ptfe-demo.*.public_ip, count.index)}"]
+  records = ["${element(aws_instance.ptfe-demo.*.public_ip, count.index)}"]
 
   connection {
     type        = "ssh"
-    host        = "${element(aws_instance.${var.shortname}-ptfe-demo.*.public_ip, count.index)}"
+    host        = "${element(aws_instance.ptfe-demo.*.public_ip, count.index)}"
     user        = "ubuntu"
     private_key = "${var.aws_pem}"
     agent       = false
@@ -63,7 +63,7 @@ resource "aws_route53_record" "amy-ptfe-demo" {
       "sudo add-apt-repository -y universe",
       "sudo add-apt-repository -y ppa:certbot/certbot",
       "sudo apt-get install -y certbot",
-      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d {element(#aws_route53_record.${var.shortname}-ptfe-demo.fqdn, count.index)}",
+      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d {element(#aws_route53_record.ptfe-demo.fqdn, count.index)}",
     ]
   }
 
@@ -88,14 +88,14 @@ resource "aws_route53_record" "amy-ptfe-demo" {
       "cd /tmp/ptfe-install; curl -o install.sh https://install.terraform.io/ptfe/stable",
     ]
 
-    #    "bash /tmp/ptfe-install/install.sh no-proxy private-address=${element(aws_instance.${var.shortname}-ptfe-demo.*.public_ip, #count.index)} public-address=${element(aws_instance.${var.shortname}-ptfe-demo.*.public_ip, count.index)}"
+    #    "bash /tmp/ptfe-install/install.sh no-proxy private-address=${element(aws_instance.ptfe-demo.*.public_ip, #count.index)} public-address=${element(aws_instance.ptfe-demo.*.public_ip, count.index)}"
   }
 }
 
 output "ip" {
-  value = ["${aws_instance.${var.shortname}-ptfe-demo.*.public_ip}"]
+  value = ["${aws_instance.ptfe-demo.*.public_ip}"]
 }
 
 output "fqdn" {
-  value = "${aws_route53_record.${var.shortname}-ptfe-demo.*.fqdn}"
+  value = "${aws_route53_record.ptfe-demo.*.fqdn}"
 }
