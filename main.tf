@@ -63,7 +63,7 @@ resource "aws_route53_record" "ptfe-demo" {
       "sudo add-apt-repository -y universe",
       "sudo add-apt-repository -y ppa:certbot/certbot",
       "sudo apt-get install -y certbot",
-      "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d ${element(aws_route53_record.ptfe-demo.fqdn, count.index)}",
+      # "sudo certbot certonly --standalone --non-interactive --agree-tos --email ${var.email_address} -d ${element(aws_route53_record.ptfe-demo.fqdn, count.index)}",
     ]
   }
 
@@ -83,13 +83,13 @@ resource "aws_route53_record" "ptfe-demo" {
   #  destination = "/tmp/ptfe-install/license.rli"
   #  }
   #
-  provisioner "remote-exec" {
-    inline = [
-      "cd /tmp/ptfe-install; curl -o install.sh https://install.terraform.io/ptfe/stable",
-    ]
+  #provisioner "remote-exec" {
+  #  inline = [
+  #    "cd /tmp/ptfe-install; curl -o install.sh https://install.terraform.io/ptfe/stable",
+  #  ]
 
     #    "bash /tmp/ptfe-install/install.sh no-proxy private-address=${element(aws_instance.ptfe-demo.*.public_ip, #count.index)} public-address=${element(aws_instance.ptfe-demo.*.public_ip, count.index)}"
-  }
+  #}
 }
 
 output "ip" {
